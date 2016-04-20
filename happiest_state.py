@@ -135,16 +135,17 @@ def main():
     for i in range(0,len(cleanState)):
         state= findState(cleanState[i])#Split line into (city, state) and recover state string if available
         if state in states.keys():#Search for state abbrev. in dictionary keys list
-            state= str(state.upper())#Aha! Here's the problem: We get a 
-            tweet_sent= [singleStrSent(cleanTweet[j],scores) for j in range(0,len(cleanTweet))]
+            #state= str(state.upper())#Aha! Here's the problem: We get a 
+            
+            tweet_sent= singleStrSent(cleanTweet[i],scores)# for j in range(0,len(cleanTweet))]
+            print state, tweet_sent
             #print len(scores)
-            #tweet_sent= singleStrSent(cleanTweet[i],sent_file)#Recovers tweet text
-            #print 'tweet_sent:', tweet_sent
+
             stateList.append(state)#Appends state and tweets to respective lists
             #sentimentList.append(tweet_sent)
             #Updated: instead of appending tweet_sent, we'll append the average of tweet_sent
             
-            stateScoreDict[state].append(sum(tweet_sent)/len(tweet_sent))#Append tweet sentiment score to list of scores for appropriate state
+            stateScoreDict[state].append(tweet_sent)#Append tweet sentiment score to list of scores for appropriate state
         
     #==Consolidate scores to average score and find max score
     #The final step is to consolidate the values of our score dictionary into a new dictionary
