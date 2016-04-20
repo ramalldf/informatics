@@ -137,7 +137,7 @@ def main():
         if state in states.keys():#Search for state abbrev. in dictionary keys list
             #state= str(state.upper())#Aha! Here's the problem: We get a 
             
-            tweet_sent= singleStrSent(cleanTweet[i],scores)# for j in range(0,len(cleanTweet))]
+            tweet_sent= singleStrSent(cleanTweet[i],scores)#Get tweet sentiment from cleanTweet for tweet at same index as state
             print state, tweet_sent
             #print len(scores)
 
@@ -150,13 +150,13 @@ def main():
     #==Consolidate scores to average score and find max score
     #The final step is to consolidate the values of our score dictionary into a new dictionary
     #with average sentiment scores for each state (that had at least one score)
-    print 'This is the score for WA', stateScoreDict['WA']
+    
     #stateScoreDict values are actually a list of lists 
     stateScoreAvg= {key: (float(sum(stateScoreDict[key]))/len(stateScoreDict[key])) for key in stateScoreDict if len(stateScoreDict[key]) > 0}
-    print stateScoreDict
-    print stateScoreAvg#Then we'll find the max score in our new dictionary
-    #maxVal= max(stateScoreAvg.values())#Turn values into a list, return max value in that list
-    #maxState= [i for i in stateScoreAvg.keys() if stateScoreAvg[i] == maxVal]#Return key with equivalent value to max value and max value
-    #print maxVal
+    
+    #print stateScoreAvg#Then we'll find the max score in our new dictionary
+    maxVal= max(stateScoreAvg.values())#Turn values into a list, return max value in that list
+    maxState= [i for i in stateScoreAvg.keys() if stateScoreAvg[i] == maxVal]#Return key with equivalent value to max value and max value
+    print maxState
 if __name__ == '__main__':
     main()
