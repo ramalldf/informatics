@@ -101,7 +101,7 @@ def singleStrSent(tweet, scoreDict):
     for i in range(0,len(split_tweet)):
         #print 'Term: ', split_tweet[i], ', In dict?: ', split_tweet[i] in scoreDict.keys()
         if split_tweet[i] in scoreDict.keys():
-            print 'Found one! ', split_tweet[i], scoreDict[split_tweet[i]]
+            #print 'Found one! ', split_tweet[i], scoreDict[split_tweet[i]]
             tweet_score.append(scoreDict[split_tweet[i]])
         else:
             tweet_score.append(0)
@@ -117,7 +117,7 @@ def main():
     for line in afinnfile:
         term, score  = line.split("\t")  # The file is tab-delimited. "\t" means "tab character"
         scores[term] = int(score)  # Convert the score to an integer.
-    print len(scores), type(scores)
+    #print len(scores), type(scores)
     #==Reading files and cleaning them==
     stateTweets = tweet_state(tweet_file)#Generate list of states and corresponding tweets
     
@@ -138,7 +138,7 @@ def main():
             #state= str(state.upper())#Aha! Here's the problem: We get a 
             
             tweet_sent= singleStrSent(cleanTweet[i],scores)#Get tweet sentiment from cleanTweet for tweet at same index as state
-            print state, tweet_sent
+            #print state, tweet_sent
             #print len(scores)
 
             stateList.append(state)#Appends state and tweets to respective lists
