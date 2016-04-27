@@ -16,8 +16,7 @@ def mapper(record):
     key = record[0]
     value = record[1]
     words = value.split()
-    #So parsing is complete, now need to change next step (original in ##) to add a second argument to mr.emit_intermediate that incorporates the key instead of a 1...maybe add a second list in a loop?
-    #Maybe I just need to assign each key to a numerical value?
+    #So parsing is complete, now need to change next step (original in ##) to add a second argument to mr.emit_intermediate that incorporates the key instead of a 1
     ## for w in words:
       ## mr.emit_intermediate(w, 1)
     for w in words:
