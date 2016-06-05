@@ -8,7 +8,8 @@ import pandas as pd
 import seaborn as sns
 
 stateScoreFile= sys.argv[1]
-mapfile= sys.argv[2]
+mapfile= sys.argv[3]
+mapTitle= sys.argv[2]
 
 stateScores= json.load(open(stateScoreFile))
 
@@ -92,22 +93,41 @@ for i in range(0,len(normScores)):
         colorScore.append(matplotlib.colors.rgb2hex(cmap(norm(normScores[i]))[:3]))
 
 
-# Not all the states have the same number of tweets, thus we'll need to represent this in our map. The alpha transparency property will be a good way to scale the color intensity of each state based on the weights we calculated for each state. The more transparent the color, the fewer tweets it generated.
+#Bokeh has a little bit of problems adding colorbars to figures. Thus, we'll generate a colorbar using matplotlib and scale it using the same max/min we used above. I'll save/crop the figure colorbar and save it as a png in Dropbox and add the link to reference it for every state.
 
-# In[475]:
+#Just making a matrix to be able to use the colorbar. Made sure to use the same cmap and vmin/vmax range as above!
+data= np.array([[3,2,3,4],[0,3,4,1]])
+plt.imshow(data, vmin = -1.5, vmax = 1.5, cmap = 'bwr', interpolation = 'nearest')
+plt.colorbar(label = 'Sentiment Score')
+
+#Finally here we'll get the address for an image of our colorbar that will pop up with all of the hovertool data for every state
+scalebar= 'https://db.tt/5LGfM4dz'
+stateUrls= [scalebar]*49
+
+#==Make Choropleth of sentiment scores for each state==
+#Now we'll use Bokeh to make a choropleth plot that displays the name of each state along with its corresponding tweet count and sentiment score. Unlike in previous Bokeh plots we've made, since our HoverTool tooltips feature will contain the scalebar image, all of the data in the ColumnDataSource will need to be called using HTML commands.
 
 from bokeh.plotting import figure, output_file, show, ColumnDataSource
 from bokeh.models import HoverTool
 
 #We'll now make the source for the info on our hover
-source= ColumnDataSource(data= dict(stateKey=ordScoreKey, counts=orderedCounts, score=ordMeanScore))
+source= ColumnDataSource(data= dict(stateKey=ordScoreKey, counts=orderedCounts, score=ordMeanScore, scale= stateUrls))
 
-hover= HoverTool(tooltips= [("State", "@stateKey"), ("Avg Tweet Score", "@score"), ("# of Tweets", "@counts")])
 
-p = figure(title="Twitter Sentiment Score ", tools=[hover, 'wheel_zoom', 'pan', 'reset'], toolbar_location="left",
+hover= HoverTool(tooltips= '''
+                 <div><label style='font-size: 17px; font-family: Arial; font-weight: bold;'>State: <span style="font-size: 17px; font-family: Arial; font-weight: normal;">@stateKey</span></label></div>
+                 <div><label style='font-size: 17px; font-family: Arial; font-weight: bold;'>Count: <span style="font-size: 17px; font-family: Arial; font-weight: normal;"">@counts</span></label></div>
+                 <div><label style='font-size: 17px; font-family: Arial; font-weight: bold;'>Mean Score: </label></div>
+                 <div><span style="font-size: 17px; font-family: Arial; font-weight: normal;">@score</span></div>
+                 <div><img src= '@scale'</img><div>                
+          
+'''
+)
+
+p = figure(title= mapTitle, tools=[hover, 'wheel_zoom', 'pan', 'reset'], toolbar_location="left",
            plot_width=1100, plot_height=700)
 
-#Plot map and use color list to assign colors
+#Plot map and use color list to assign colors to each state
 p.patches(state_xs, state_ys, line_color= 'black', color= colorScore, source= source)#, fill_alpha= alphaWeights)
 #This part here is the tricky part ,we must take the order listed by states and match it with our score/weight order
 
